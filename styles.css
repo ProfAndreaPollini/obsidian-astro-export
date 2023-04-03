@@ -6,3 +6,7 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+.astro_plugin__danger {
+	color: #ff0000;
+	font-size: x-large;
+}

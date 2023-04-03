@@ -1,0 +1,11 @@
+{
+	"Plugin is working.":"Plugin is working.",
+	"Plugin is not working. Please check the settings.":"Plugin is not working. Please check the settings.",
+	"Settings for Astro Exporter plugin.":"Settings for Astro Exporter plugin.",
+	"Base path for astro output project":"Base path for astro output project",
+	"select the base path the astro project you want to export to.":"Select the base path the astro project you want to export to.",
+	"output folder absolute path":"Output folder absolute path",
+	"Folders to watch":"Folders to watch",
+	"Select the folders to watch for changes,comma separated.":"Select the folders to watch for changes,comma separated.",
+	"folders names, comma separated":"folders names, comma separated"
+}

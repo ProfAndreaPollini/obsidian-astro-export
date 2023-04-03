@@ -1,0 +1,11 @@
+{
+	"Plugin is working.":"Il plugin funziona.",
+	"Plugin is not working. Please check the settings.":"Il plugin non funziona, ricontrolla le impostazioni.",
+	"Settings for Astro Exporter plugin.":"Impostazioni per: Astro Exporter plugin.",
+	"Base path for astro output project":"Percorso base per il progetto astro di output",	
+	"select the base path the astro project you want to export to.":"Seleziona il percorso base del progetto astro che vuoi esportare.",
+	"output folder absolute path":"Cartella di output (percorso assoluto)",
+	"Folders to watch":"Cartelle da monitorare",
+	"Select the folders to watch for changes,comma separated.":"Seleziona le cartelle da monitorare per le modifiche, separate da virgola.",
+	"folders names, comma separated":"Nome cartelle, separate da virgola"
+}

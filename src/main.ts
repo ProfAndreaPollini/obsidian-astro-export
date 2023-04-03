@@ -9,6 +9,13 @@ import {
 	PluginSettingTab,
 	Setting,
 } from "obsidian";
+import i18next from 'i18next';
+
+i18next.init({
+	lng: translationLanguage,
+	fallbackLng: "en",
+	resources: ressources,
+});
 
 import { AstroPublishSettings, DEFAULT_SETTINGS } from "./config";
 import AstroPublishSettingTab from "./settings";
@@ -17,6 +24,7 @@ import AstroPublishSettingTab from "./settings";
 import path from "path";
 import nodewatch from "node-watch";
 import { processFile } from "./commands";
+import { ressources, translationLanguage } from "./i18next";
 
 function getVaultAbsolutePath(app: App) {
 	let adapter = app.vault.adapter;
@@ -97,33 +105,81 @@ export default class AstroPublishPlugin extends Plugin {
 
 		new Notice(getVaultAbsolutePath(this.app));
 
-		
-
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(
 			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
 		);
-		
+		// nodewatch(getVaultAbsolutePath(this.app), { recursive: true }, function(evt, name) {
+		// 	// console.log('%s changed.', name);
+		// 	// console.log(`!! File evet ${evt}: ${name}`);
+		// 	console.log(`this = ${this}`)
+		// 	console.log(this.settings)
+		// 	if (name.endsWith("md") && this.settings
+		// 		.foldersToWatch.some((folder: string) => {
+		// 			console.log(`!! File event ${evt}: ${name} ${folder} ${path.dirname(name).indexOf(folder) > -1}`);
+		// 			// new Notice(`@@ File changed: ${path.dirname(name).indexOf(folder)} | ${folder} | path.dirname(name)`);
+		// 			return path.dirname(name).indexOf(folder) > -1
+		// 		})) { // if it is a folder in the watch list
+		// 			console.warn(`!! PROCESSING: ${name}`);
+		// 		// new Notice(`${name.split(path.sep).last()} - File changed: ${name}`);
+		// 		processFile(name,this, this.settings)
+		// 	}
+		//   });
+		nodewatch(
+			getVaultAbsolutePath(this.app),
+			{ recursive: true },
+			this.onDocumentChange
+		);
 	}
 
-	startToWatch(settings: AstroPublishSettings) {
-	new Notice(`>> Watching: ${this.settings.foldersToWatch}`)
-		nodewatch(getVaultAbsolutePath(this.app), { recursive: true }, function(evt, name) {
-			// console.log('%s changed.', name);
-			// console.log(`!! File evet ${evt}: ${name}`);
-			// console.log(settings)
-			if (name.endsWith("md") && settings
-				.foldersToWatch.some((folder: string) => {
-					console.log(`!! File event ${evt}: ${name} ${folder} ${path.dirname(name).indexOf(folder) > -1}`);
-					// new Notice(`@@ File changed: ${path.dirname(name).indexOf(folder)} | ${folder} | path.dirname(name)`);
-					return path.dirname(name).indexOf(folder) > -1
-				})) { // if it is a folder in the watch list
-					console.warn(`!! PROCESSING: ${name}`);
-				// new Notice(`${name.split(path.sep).last()} - File changed: ${name}`);
-				processFile(name, settings)
-			}
-		  });
+	onDocumentChange = (evt: any, name: string) => {
+		if (
+			name.endsWith("md") &&
+			this.settings.foldersToWatch.some((folder: string) => {
+				console.log(
+					`!! File event ${evt}: ${name} ${folder} ${
+						path.dirname(name).indexOf(folder) > -1
+					}`
+				);
+				return path.dirname(name).indexOf(folder) > -1;
+			})
+		) {
+			// if it is a folder in the watch list
+			console.warn(`!! PROCESSING: ${name}`);
+			// new Notice(`${name.split(path.sep).last()} - File changed: ${name}`);
+			processFile(name, this);
 		}
+	};
+
+	startToWatch(settings: AstroPublishSettings) {
+		new Notice(`>> Watching: ${this.settings.foldersToWatch}`);
+		nodewatch(
+			getVaultAbsolutePath(this.app),
+			{ recursive: true },
+			function (evt, name) {
+				// console.log('%s changed.', name);
+				// console.log(`!! File evet ${evt}: ${name}`);
+				// console.log(settings)
+				if (
+					name.endsWith("md") &&
+					settings.foldersToWatch.some((folder: string) => {
+						console.log(
+							`!! File event ${evt}: ${name} ${folder} ${
+								path.dirname(name).indexOf(folder) > -1
+							}`
+						);
+						// new Notice(`@@ File changed: ${path.dirname(name).indexOf(folder)} | ${folder} | path.dirname(name)`);
+						return path.dirname(name).indexOf(folder) > -1;
+					})
+				) {
+					// if it is a folder in the watch list
+					console.warn(`!! PROCESSING: ${name}`);
+					// new Notice(`${name.split(path.sep).last()} - File changed: ${name}`);
+					processFile(name, this);
+				}
+			}
+		);
+	}
 
 	onunload() {}
 
@@ -134,7 +190,6 @@ export default class AstroPublishPlugin extends Plugin {
 			await this.loadData()
 		);
 		console.warn("Settings loaded: ", this.settings);
-		this.startToWatch(this.settings)
 	}
 
 	async saveSettings() {

@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-astro-publish-plugin",
-	"name": "Obsidian Publish Plugin",
+	"id": "obsidian-astro-export-plugin",
+	"name": "Obsidian Astro Export Plugin",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Andrea Pollini",
+	"description": "This is a plugin to export your notes to Astro static site generator.",
+	"author": "ProfAndreaPollini",
 	"authorUrl": "https://andreapollini.com",
 	"isDesktopOnly": false
 }
