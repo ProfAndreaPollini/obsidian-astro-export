@@ -8,6 +8,8 @@ import matter from 'gray-matter';
 import { AstroPublishSettings } from './config';
 import {visit} from 'unist-util-visit'
 import AstroPublishPlugin from './main';
+import { TFile } from 'obsidian';
+import { Link } from 'mdast-util-from-markdown/lib';
 
 
 
@@ -31,12 +33,68 @@ export const processFile = async (filename:string,plugin: AstroPublishPlugin) =>
   frontmatter.readingTime = readingTime
   tree.children = children
 
+ 
 //   console.log(processedDoc)
 //   console.log(frontmatter.tags)
 //   console.log(frontmatter.kind)
   if (frontmatter.kind && frontmatter.slug && frontmatter.draft !== true) {
 	const dir = path.join(settings.outContentFolder,"src",'content')
     const kindDir = path.join(dir, frontmatter.kind)
+
+	const links: Array<{ f:string,node: Link}> = []
+
+	const MarkdownfileContents = new Map<string,string>()
+	
+
+	for (const f of plugin.app.vault.getMarkdownFiles()) {
+		const content  = await plugin.app.vault.read(f)
+		const {data} = matter(content)
+		if (data.slug !== undefined) {
+		MarkdownfileContents.set(decodeURI(f.path),data.slug)
+		}
+	}
+
+
+	const relatedProp : string[] = []
+	const relatedTree = fromMarkdown(frontmatter.related || "")
+	visit(relatedTree,"link",  (node) => {
+		console.log(`related link ${node.url}`)
+		// node.url = MarkdownfileContents.get(decodeURI(node.url)) || node.url
+		// console.log(`-> ${node.url}`)
+		const p = MarkdownfileContents.get(decodeURI(node.url))
+		if(p){
+		relatedProp.push(p)
+		}
+	})
+	frontmatter.related = relatedProp
+	
+	console.log(MarkdownfileContents)
+
+	visit(tree,"link",  (node) => {
+		if (node.url === undefined) {
+			console.error("NODE UNDEFINED")
+		}
+		const {url} =node // absolute path in the vault
+
+		// const content = plugin.app.vault.getAbstractFileByPath(url) as TFile
+		// if(content) {
+			console.warn(`link ${decodeURI(url)} -> ${MarkdownfileContents.get(decodeURI(url))}`)
+			node.url = MarkdownfileContents.get(decodeURI(url)) || url
+		// }
+		// if (content) {
+		// 	fileContents =  plugin.app.vault.read(content)
+		// 	const {data} = matter()
+		// 	node.url = data.slug
+		// }
+	})
+
+	// for (const link of links) {
+	// 	const fileContents =  await plugin.app.vault.read(link.f)
+	// 	const {data} = matter(fileContents)
+	// 	const linkUrl = data.slug
+	// 	console.log(`link ${link.f.path} -> ${linkUrl}`)
+	// 	link.node.url = linkUrl
+	// }
     
 	visit(tree,"image", (node) => {
 		console.log(`processing image ${node.url}`)
@@ -49,12 +107,9 @@ export const processFile = async (filename:string,plugin: AstroPublishPlugin) =>
 			const imageFileOut = path.join(settings.outContentFolder,"public",node.url)
 			node.url = "/public/"+ node.url
 			console.log(`IMAGE COPY ${imageFile} -> ${imageFileOut} with url ${node.url}`)
-		
 			try {
 				copyFileSync(imageFile,imageFileOut)
-			
 		} catch (e) {console.warn(e)}
-			
 		}
 	  }) 
 	  await fs.mkdir(kindDir, {recursive: true})
