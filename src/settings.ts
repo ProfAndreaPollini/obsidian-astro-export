@@ -15,7 +15,7 @@ export default class AstroPublishSettingTab extends PluginSettingTab {
 	constructor(app: App, plugin: AstroPublishPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
-		
+		this.plugin_ok  = this.containerEl.createDiv({text: ''});
 		
 	}	
 
@@ -36,7 +36,7 @@ export default class AstroPublishSettingTab extends PluginSettingTab {
 		containerEl.empty();
 		
 		containerEl.createEl('h2', {text: t("Settings for Astro Exporter plugin.")});
-		this.plugin_ok  = containerEl.createDiv({text: ''});
+		// this.plugin_ok  = containerEl.createDiv({text: ''});
 		
 		this.updateWorkingStatus();
 	

@@ -39,41 +39,12 @@ function isWatchingFolder(folder: string, settings: AstroPublishSettings) {
 }
 
 export default class AstroPublishPlugin extends Plugin {
-	settings: AstroPublishSettings;
+	settings: AstroPublishSettings = {} as AstroPublishSettings;
 
 	async onload() {
 		await this.loadSettings();
 
-		// // This creates an icon in the left ribbon.
-		// const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
-		// 	// Called when the user clicks the icon.
-		// 	new Notice('This is a notice!');
-		// });
-		// // Perform additional things with the ribbon
-		// ribbonIconEl.addClass('my-plugin-ribbon-class');
 
-		// // This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		// const statusBarItemEl = this.addStatusBarItem();
-		// statusBarItemEl.setText('Status Bar Text');
-
-		// This adds a simple command that can be triggered anywhere
-		// this.addCommand({
-		// 	id: 'open-sample-modal-simple',
-		// 	name: 'Open sample modal (simple)',
-		// 	callback: () => {
-		// 		new SampleModal(this.app).open();
-		// 	}
-		// });
-		// This adds an editor command that can perform some operation on the current editor instance
-		// this.addCommand({
-		// 	id: 'sample-editor-command',
-		// 	name: 'Sample editor command',
-		// 	editorCallback: (editor: Editor, view: MarkdownView) => {
-		// 		console.log(editor.getSelection());
-		// 		editor.replaceSelection('Sample Editor Command');
-		// 	}
-		// });
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
 		this.addCommand({
 			id: "open-sample-modal-complex",
 			name: "Open sample modal (complex)",
@@ -156,7 +127,7 @@ export default class AstroPublishPlugin extends Plugin {
 		nodewatch(
 			getVaultAbsolutePath(this.app),
 			{ recursive: true },
-			function (evt, name) {
+			 (evt, name) => {
 				// console.log('%s changed.', name);
 				// console.log(`!! File evet ${evt}: ${name}`);
 				// console.log(settings)
@@ -175,7 +146,7 @@ export default class AstroPublishPlugin extends Plugin {
 					// if it is a folder in the watch list
 					console.warn(`!! PROCESSING: ${name}`);
 					// new Notice(`${name.split(path.sep).last()} - File changed: ${name}`);
-					processFile(name, this);
+					processFile(name, this );
 				}
 			}
 		);
