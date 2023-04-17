@@ -106,9 +106,9 @@ export default class AstroPublishPlugin extends Plugin {
 		new Notice(getVaultAbsolutePath(this.app));
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(
-			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
-		);
+		// this.registerInterval(
+		// 	window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
+		// );
 		// nodewatch(getVaultAbsolutePath(this.app), { recursive: true }, function(evt, name) {
 		// 	// console.log('%s changed.', name);
 		// 	// console.log(`!! File evet ${evt}: ${name}`);

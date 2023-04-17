@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-	"resolveJsonModule": true,
-    "baseUrl": ".",
+	"baseUrl": ".",
     "inlineSourceMap": true,
     "inlineSources": true,
     "module": "ESNext",
@@ -11,8 +10,10 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "isolatedModules": true,
-	"strictNullChecks": true,
-	"allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true,
     "lib": [
       "DOM",
       "ES5",

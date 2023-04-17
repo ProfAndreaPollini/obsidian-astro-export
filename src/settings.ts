@@ -68,5 +68,18 @@ export default class AstroPublishSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				}
 			));
+
+		new Setting(containerEl)
+			.setName(t("Frontmatter property to activate export"))
+			.setDesc(t("Select the property to use to activate export."))
+			.addText(text => text
+				.setPlaceholder(t("property name"))
+				.setValue(this.plugin.settings.exportProperty)
+				.onChange(async (value) => {
+					
+					this.plugin.settings.exportProperty = value;
+					await this.plugin.saveSettings();
+				}
+			));
 	}
 }
